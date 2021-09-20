@@ -5,27 +5,29 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-	//"github.com/streadway/amqp"
 	"github.com/rabbitmq/rabbitmq-stream-go-client/pkg/stream" // Main package
 	"github.com/rabbitmq/rabbitmq-stream-go-client/pkg/amqp" // amqp 1.0 package to encode messages
-	//"github.com/rabbitmq/rabbitmq-stream-go-client/pkg/message" // messages interface package, you may not need to import it directly
 	"sync/atomic"
+	"strconv"
 )
 
 type rabbitClient struct {
+	// This is the connection string to all the stream servers
 	connString  string
 	streamName   string
+	// this one count the number of item processed
 	count       int32
+	// Total number of batches
 	size        int32
+	// Keep the batched items
 	buffer      []string
 	gpssclient  *gpssClient
-	filePath    string
-	fileBatch   *os.File
 	env         *stream.Environment
+	// Type of offset we want to read from
+	offset      string
 }
 
-func makeRabbitClient(connString string, streamName string, size int32, gpssclient *gpssClient) *rabbitClient {
+func makeRabbitClient(connString string, streamName string, size int32, offset string, gpssclient *gpssClient) *rabbitClient {
 	client := new(rabbitClient)
 	client.connString = connString
 	client.streamName = streamName
@@ -33,6 +35,7 @@ func makeRabbitClient(connString string, streamName string, size int32, gpssclie
 	client.size = size
 	client.buffer = make([]string, size)
 	client.gpssclient = gpssclient
+	client.offset = offset
 
 	return client
 }
@@ -98,15 +101,26 @@ func (client *rabbitClient) consume() {
 	
 }
 
-	
+	startOffset := stream.OffsetSpecification{}.First()
+
+	if client.offset == "first"   {
+		startOffset = stream.OffsetSpecification{}.First()
+	} else if client.offset == "last" {
+		startOffset = stream.OffsetSpecification{}.Last()
+	}  else if client.offset == "lastconsumed" {
+		startOffset = stream.OffsetSpecification{}.LastConsumed()
+	} else  {
+		offsetInt, _ := strconv.Atoi(client.offset)
+		offsetInt64 := int64(offsetInt)
+		startOffset = stream.OffsetSpecification{}.Offset(offsetInt64)
+	}	
+
 	consumer, err := client.env.NewConsumer(
 			client.streamName,
 			handleMessages,
 			stream.NewConsumerOptions().
 			SetConsumerName("gpss").                 // set a consumer name
-			SetOffset(stream.OffsetSpecification{}.First()))
-			//SetOffset(stream.OffsetSpecification{}.LastConsumed())) // start consuming from the beginning
-			/*SetOffset(stream.OffsetSpecification{}.Offset(2)))*/
+			SetOffset(startOffset))
 
 			CheckErr(err)
 

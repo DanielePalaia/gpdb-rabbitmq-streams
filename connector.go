@@ -8,6 +8,8 @@ import (
 
 func main() {
 
+	/****This part will just read properties configuration file inside the same folder******/
+
 	log.Printf("Starting the connector and reading properties in the properties.ini file")
 	/* Reading properties from ./properties.ini */
 	prop, _ := ReadPropertiesFile("./properties.ini")
@@ -25,7 +27,7 @@ func main() {
 
 	log.Printf("Connecting to rabbit and consuming")
 	/* Generate teh rabbit connection */
-	rabbit := makeRabbitClient(prop["rabbitstream"], prop["streamName"], int32(batch), gpssClient)
+	rabbit := makeRabbitClient(prop["rabbitstream"], prop["streamName"], int32(batch), prop["offset"], gpssClient)
 	rabbit.connect()
 	rabbit.consume()
 
