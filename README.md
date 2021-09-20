@@ -1,7 +1,7 @@
 # Rabbitmq streams - Greenplum GPSS connector
 
 This project is a modification of my previous work: </br> 
-# Rabbitmq streams - Greenplum GPSS connector</br> 
+Rabbitmq streams - Greenplum GPSS connector</br> 
 to let the connector work also with the new rabbitmq streams functionality: </br>
 https://blog.rabbitmq.com/posts/2021/07/rabbitmq-streams-overview</br>
 This project should be considered experimental, still under development and non production ready  </br>
