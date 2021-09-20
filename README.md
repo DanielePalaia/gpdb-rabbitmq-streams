@@ -132,12 +132,15 @@ You should then see a queue of type stream with name you specified in the proper
  
  Every batch items inserted on the stream you should find something like this on the server side:
  
+```
 2021/09/20 13:08:35 Batch reached: I'm sending request to write to gpss/gprc server
 2021/09/20 13:08:35 connecting to a greenplum database
 2021/09/20 13:08:35 Beginning to write to greenplum
 2021/09/20 13:08:35 table informations
 2021/09/20 13:08:35 prepare for writing
 Result:  SuccessCount:3 
+
+```
 
 and then in the Greenplum table the items inserted:
 
