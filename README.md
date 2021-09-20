@@ -102,9 +102,9 @@ Batch is the amount of items the client will batch before sending the ingest req
 Client offset are kept inside the server. Rabbitmq streams offers this functionality to store the last reading offset of a client in a server.
 In the project this is tracked by the offset offset=lastconsumed property.
 You can specify 4 values: </br>
-**first**: the client will start reading from the first offset
-**last**: The client will read from the last offset (will basically wait for new messages to arrive on the stream)
-**lastconsumed**: The client will start from the last read and registered offset
+**first**: the client will start reading from the first offset </br>
+**last**: The client will read from the last offset (will basically wait for new messages to arrive on the stream) </br>
+**lastconsumed**: The client will start from the last read and registered offset </br>
 **an integer**: The client will start from the offset specified
 
 ## How to execute
