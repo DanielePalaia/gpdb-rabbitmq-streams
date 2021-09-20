@@ -151,3 +151,4 @@ dashboard=# select * from people;
 
 ```
  
+ Play with the offset property in order to test the offset management from start, to the lastconsumed or to a random offset.
