@@ -79,7 +79,8 @@ The application is written in GO. If you are using MacOs or Linux64 then you can
 
 2. **Setting property file**    
 Use the file properties.ini (that should be place in the same directory of the binary in order to instruct the program        with this properties
-      
+
+```
 GpssAddress=192.168.12.145:50009
 GreenplumAddress=192.168.12.145
 GreenplumPort=5432
@@ -92,4 +93,5 @@ rabbitstream=rabbitmq-stream://daniele:daniele@localhost:5552/
 streamName=gpss
 batch=3
 offset=lastconsumed
+```
 
