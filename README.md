@@ -38,7 +38,7 @@ The connector will attach to a rabbitmq stream specified at configuration time w
       The table can be generic with any number of coloumns and data types. The important thing is that the input to ingest         will be coherent with the table definition. Let's try this table as example:
    
       ```
-      test=# create table companies(id varchar (200), city varchar (200), foundation timestamp, description text, data json);
+      test=# create table people(id int, name text, surname text, email text, profession text);
       ```
 
    ![Screenshot](./pics/definition.png)
@@ -95,3 +95,40 @@ batch=3
 offset=lastconsumed
 ```
 
+Batch is the amount of items the client will batch before sending the ingest request to gpss, and also it will commit the last read offset to the server when reaching this batch amount (see the tracking offset section)
+
+## Tracking offset
+
+Client offset are kept inside the server. Rabbitmq streams offers this functionality to store the last reading offset of a client in a server.
+In the project this is tracked by the offset offset=lastconsumed property.
+You can specify 4 values: </br>
+**first**: the client will start reading from the first offset
+**last**: The client will read from the last offset (will basically wait for new messages to arrive on the stream)
+**lastconsumed**: The client will start from the last read and registered offset
+**an integer**: The client will start from the offset specified
+
+## How to execute
+
+You can just run the binary connector inside /bin/osx or /bin/linux in order to start the connector and create the rabbitmq stream
+
+```
+dpalaia@dpalaia-a02 osx % ./connector
+2021/09/20 12:52:20 Starting the connector and reading properties in the properties.ini file
+2021/09/20 12:52:20 Properties read: Connecting to the Grpc server specified
+2021/09/20 12:52:20 Connected to the grpc server
+2021/09/20 12:52:20 Connecting to rabbit and consuming
+2021/09/20 12:52:20 streamName: rabbitmq-stream://daniele:daniele@localhost:5552/
+2021/09/20 12:52:20 connecting to rabbit
+2021/09/20 12:52:20 declaring stream
+```
+
+You should then see a queue of type stream with name you specified in the properties.ini created:
+
+ ![Screenshot](./pics/stream.png)<br/>
+ 
+ you can then publish the message using rabbitmq UI
+ 
+  ![Screenshot](./pics/publish.png)<br/>
+ 
+ 
+ 
